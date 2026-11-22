@@ -66,23 +66,22 @@ details.tbl td,details.tbl th{text-align:left;font-weight:400;padding:.25rem .4r
 .xrow p{margin:0 0 .9rem;font-size:.86rem;color:var(--ink-2);padding-left:.9rem;border-left:2px solid var(--wash)}
 .xhead{display:grid;grid-template-columns:1fr 1.4rem 1fr;gap:.6rem;font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-bottom:.7rem}
 
-/* timeline: vertical, length = time */
+/* timeline: year ruler, deployments as brackets, recovery as a background band */
 .timeline{padding:2rem 0 1.6rem;border-bottom:1px solid var(--ink)}
-.timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 .4rem}
-.timeline .say{color:var(--ink-2);margin:0 0 1.6rem;max-width:40rem}
-.vt{position:relative;max-width:40rem}
-.vt .rail{position:absolute;width:.75rem;border-radius:2px}
-.vt .rail.army{left:0;background:var(--ink)}
-.vt .rail.recovery{left:0;background:repeating-linear-gradient(135deg,var(--paper-2) 0 5px,#D6CDBB 5px 10px);border:1px solid var(--neutral)}
-.vt .rail.ai{left:1.05rem;background:var(--signal)}
-.vt .rail.ai::after{content:"";position:absolute;left:50%;bottom:-.55rem;transform:translateX(-50%);border:.45rem solid transparent;border-top:.55rem solid var(--signal);border-bottom:0}
-.vt .item{position:absolute;left:2.6rem;right:0;line-height:1.3}
-.vt .item b{font:600 .98rem/1.3 var(--sans)}
-.vt .item .yr{font:500 .74rem var(--mono);color:var(--ink-3);margin-right:.5rem}
-.vt .item .sub{display:block;font-size:.85rem;color:var(--ink-2)}
-.vt .item.ai .yr,.vt .item.ai b{color:var(--signal)}
-.vt .tick{position:absolute;left:0;width:1.8rem;border-top:1px solid var(--ink-3)}
-.gapline{margin:2.6rem 0 0;font:600 1.05rem/1.4 var(--serif);max-width:40rem}
+.timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 0}
+.e2x{max-width:40rem}
+.e2x .ruler{position:relative;height:2px;background:var(--ink);margin:3.8rem 0 0;z-index:2}
+.e2x .tick{position:absolute;top:-5px;height:12px;border-left:2px solid var(--ink)}
+.e2x .tick span{position:absolute;top:16px;left:50%;transform:translateX(-50%);font:500 .7rem var(--mono);color:var(--ink-3)}
+.e2x .br{position:absolute;bottom:10px;height:10px;border:2px solid var(--ink);border-bottom:0;z-index:2}
+.e2x .br span{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font:600 .74rem/1.15 var(--sans);white-space:nowrap}
+.e2x .br.ai{border-color:var(--signal)} .e2x .br.ai span{color:var(--signal)}
+.e2x .band{position:absolute;bottom:-1px;height:42px;background:repeating-linear-gradient(135deg,rgba(130,125,116,.10) 0 5px,rgba(130,125,116,.24) 5px 10px);border-left:1px dashed var(--neutral);border-right:1px dashed var(--neutral);z-index:1}
+.e2x .band span{position:absolute;top:1px;left:50%;transform:translateX(-50%);font:600 .74rem var(--sans);color:var(--ink-2);white-space:nowrap}
+.e2x .legend{display:grid;gap:.5rem;font-size:.88rem;margin-top:2.6rem}
+.e2x .legend .yr{font:500 .75rem var(--mono);color:var(--ink-3)}
+.e2x .legend .ai b,.e2x .legend .ai .yr{color:var(--signal)}
+.gapline{margin:2rem 0 0;font:600 1.05rem/1.4 var(--serif);max-width:40rem}
 .gapline span{background:linear-gradient(transparent 60%,var(--wash) 60%)}
 
 footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align-items:baseline;justify-content:space-between}
@@ -152,9 +151,16 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
 
 <section class="timeline">
   <p class="label">The path</p>
-  <h2>Two deployments, a long recovery, and AI from the start.</h2>
-  <p class="say">Each bar's length is time. The AI line starts inside the recovery: I taught myself while I fought my way back.</p>
-  <div class="vt" id="vt" role="img" aria-label="Timeline: Iraq 2004 to 2005; Kuwait 2010 to 2011; recovering from service-connected injuries 2011 to 2025; building with AI daily since ChatGPT launched in late 2022; Token Tracker in 2026."></div>
+  <h2>Service, recovery, and AI.</h2>
+  <div class="e2x" role="img" aria-label="Timeline: Iraq 2004 to 2005; Kuwait 2010 to 2011; recovering from service-connected injuries 2011 to 2025; building with AI daily since late 2022, during recovery; Token Tracker in 2026.">
+    <div class="ruler" id="ruler"></div>
+    <div class="legend">
+      <div><span class="yr">2004–05</span> <b>Iraq</b>: civil affairs, radios and encryption</div>
+      <div><span class="yr">2010–11</span> <b>Kuwait</b>: sergeant, led an eight-person section</div>
+      <div><span class="yr">2011–25</span> <b>Recovery</b> from service-connected injuries</div>
+      <div class="ai"><span class="yr">2022 →</span> <b>AI every day</b>, then Token Tracker in 2026</div>
+    </div>
+  </div>
   <p class="gapline"><span>My resume has a ten-year gap.</span> I spent it recovering from service-connected injuries and fighting my way back to work. That fight is what I bring to your problems.</p>
 </section>
 
@@ -206,19 +212,17 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
 
 // ---------- timeline ----------
 (function(){
-  const Y0=2003.6, Y1=2027.2, K=17; // pixels per year
-  const top=yr=>((yr-Y0)*K)+'px', h=(a,b)=>((b-a)*K)+'px';
-  const vt=document.getElementById('vt'); vt.style.height=((Y1-Y0)*K)+'px';
-  const rails=[{a:2004,b:2005.4,c:'army'},{a:2010,b:2011.4,c:'army'},{a:2011.5,b:2025.4,c:'recovery'},{a:2022.9,b:2026.6,c:'ai'}];
-  const items=[
-    {at:2004,yr:'2004–05',t:'Iraq',sub:'Civil affairs, radios and encryption'},
-    {at:2010,yr:'2010–11',t:'Kuwait',sub:'Sergeant, led an eight-person section'},
-    {at:2016.4,yr:'2011–25',t:'Recovering from service-connected injuries',sub:'Fighting my way back to work'},
-    {at:2022.9,yr:'2022 →',t:'Building with AI every day',sub:'Since ChatGPT launched',c:'ai'},
-    {at:2025.9,yr:'2026',t:'Token Tracker',sub:'40% fewer AI tokens, quality held',c:'ai'}
-  ];
-  vt.innerHTML=rails.map(r=>`<div class="rail ${r.c}" style="top:${top(r.a)};height:${h(r.a,r.b)}"></div>`).join('')
-    +items.map(i=>`<div class="item ${i.c||''}" style="top:${top(i.at)}"><span class="yr">${i.yr}</span><b>${i.t}</b><span class="sub">${i.sub}</span></div>`).join('');
+  const box=document.getElementById('ruler');
+  function draw(){
+    const W=box.clientWidth,Y0=2003,Y1=2027.5,x=y=>(y-Y0)/(Y1-Y0)*W;let h='';
+    [2004,2010,2022,2026].forEach(y=>h+=`<div class="tick" style="left:${x(y)}px"><span>${y}</span></div>`);
+    h+=`<div class="br" style="left:${x(2004)}px;width:${x(2005.4)-x(2004)}px"><span>Iraq</span></div>`;
+    h+=`<div class="br" style="left:${x(2010)}px;width:${x(2011.4)-x(2010)}px"><span>Kuwait</span></div>`;
+    h+=`<div class="br ai" style="left:${x(2022.9)}px;width:${x(2026.8)-x(2022.9)}px"><span>AI</span></div>`;
+    h+=`<div class="band" style="left:${x(2011.5)}px;width:${x(2025.4)-x(2011.5)}px"><span>Recovery</span></div>`;
+    box.innerHTML=h;
+  }
+  draw(); addEventListener('resize',draw);
 })();
 </script>
 </body>
