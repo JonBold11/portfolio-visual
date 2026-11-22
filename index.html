@@ -66,23 +66,23 @@ details.tbl td,details.tbl th{text-align:left;font-weight:400;padding:.25rem .4r
 .xrow p{margin:0 0 .9rem;font-size:.86rem;color:var(--ink-2);padding-left:.9rem;border-left:2px solid var(--wash)}
 .xhead{display:grid;grid-template-columns:1fr 1.4rem 1fr;gap:.6rem;font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-bottom:.7rem}
 
-/* timeline */
+/* timeline: vertical, length = time */
 .timeline{padding:2rem 0 1.6rem;border-bottom:1px solid var(--ink)}
-.timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 1.4rem}
-.lanes{position:relative;margin-left:5.5rem}
-.lane{position:relative;height:2.6rem;border-bottom:1px dashed var(--rule)}
-.lane .name{position:absolute;right:100%;margin-right:.8rem;top:50%;transform:translateY(-50%);font:500 .7rem/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);white-space:nowrap}
-.seg{position:absolute;top:.55rem;height:1.5rem;border-radius:2px;display:flex;align-items:center;padding:0 .45rem;font:500 .72rem/1 var(--mono);white-space:nowrap;overflow:visible}
-.seg.army{background:var(--ink);color:var(--paper)}
-.seg .out{position:absolute;left:calc(100% + .4rem);color:var(--ink)}
-.seg.recovery{background:repeating-linear-gradient(135deg,var(--paper-2) 0 5px,#DDD5C5 5px 10px);border:1px solid var(--neutral);color:var(--ink)}
-.seg.ai{background:var(--signal);color:#fff;border-radius:2px 0 0 2px}
-.seg.ai::after{content:"";position:absolute;right:-.6rem;top:0;border:.75rem solid transparent;border-left:.6rem solid var(--signal);border-right:0}
-.pin{position:absolute;top:-.1rem;bottom:-.1rem;border-left:2px solid var(--ink)}
-.pin span{position:absolute;left:.4rem;top:-1.05rem;font:500 .68rem/1 var(--mono);white-space:nowrap;color:var(--ink)}
-.axis{position:relative;height:1.4rem;margin-left:5.5rem}
-.axis span{position:absolute;transform:translateX(-50%);font:400 .68rem/1 var(--mono);color:var(--ink-3);top:.4rem}
-.gapline{margin:1.4rem 0 0 5.5rem;font:600 1.05rem/1.4 var(--serif);max-width:46rem}
+.timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 .4rem}
+.timeline .say{color:var(--ink-2);margin:0 0 1.6rem;max-width:40rem}
+.vt{position:relative;max-width:40rem}
+.vt .rail{position:absolute;width:.75rem;border-radius:2px}
+.vt .rail.army{left:0;background:var(--ink)}
+.vt .rail.recovery{left:0;background:repeating-linear-gradient(135deg,var(--paper-2) 0 5px,#D6CDBB 5px 10px);border:1px solid var(--neutral)}
+.vt .rail.ai{left:1.05rem;background:var(--signal)}
+.vt .rail.ai::after{content:"";position:absolute;left:50%;bottom:-.55rem;transform:translateX(-50%);border:.45rem solid transparent;border-top:.55rem solid var(--signal);border-bottom:0}
+.vt .item{position:absolute;left:2.6rem;right:0;line-height:1.3}
+.vt .item b{font:600 .98rem/1.3 var(--sans)}
+.vt .item .yr{font:500 .74rem var(--mono);color:var(--ink-3);margin-right:.5rem}
+.vt .item .sub{display:block;font-size:.85rem;color:var(--ink-2)}
+.vt .item.ai .yr,.vt .item.ai b{color:var(--signal)}
+.vt .tick{position:absolute;left:0;width:1.8rem;border-top:1px solid var(--ink-3)}
+.gapline{margin:2.6rem 0 0;font:600 1.05rem/1.4 var(--serif);max-width:40rem}
 .gapline span{background:linear-gradient(transparent 60%,var(--wash) 60%)}
 
 footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align-items:baseline;justify-content:space-between}
@@ -96,15 +96,9 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
   .board{grid-template-columns:1fr}
   .panel,.panel + .panel{padding:1.8rem 0;border-left:0}
   .panel + .panel{border-top:1px solid var(--rule)}
-  .lanes,.axis,.gapline{margin-left:0}
-  .lane{height:3.6rem}
-  .lane .name{position:static;transform:none;display:block;padding-top:.15rem}
-  .seg{top:1.45rem}
-  .seg.recovery .txt-long{display:none}
   .contact a{margin:0 1.2rem 0 0}
   .contact .avail{display:block;margin-bottom:.8rem}
 }
-@media (min-width:901px){.seg.recovery .txt-short{display:none}}
 </style>
 </head>
 <body>
@@ -158,9 +152,9 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
 
 <section class="timeline">
   <p class="label">The path</p>
-  <h2>Service, recovery, and AI since day one.</h2>
-  <div class="lanes" id="lanes"></div>
-  <div class="axis" id="axis"></div>
+  <h2>Two deployments, a long recovery, and AI from the start.</h2>
+  <p class="say">Each bar's length is time. The AI line starts inside the recovery: I taught myself while I fought my way back.</p>
+  <div class="vt" id="vt" role="img" aria-label="Timeline: Iraq 2004 to 2005; Kuwait 2010 to 2011; recovering from service-connected injuries 2011 to 2025; building with AI daily since ChatGPT launched in late 2022; Token Tracker in 2026."></div>
   <p class="gapline"><span>My resume has a ten-year gap.</span> I spent it recovering from service-connected injuries and fighting my way back to work. That fight is what I bring to your problems.</p>
 </section>
 
@@ -212,20 +206,19 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
 
 // ---------- timeline ----------
 (function(){
-  const Y0=2003, Y1=2027.5, pct=yr=>((yr-Y0)/(Y1-Y0)*100).toFixed(2)+'%', w=(a,b)=>((b-a)/(Y1-Y0)*100).toFixed(2)+'%';
-  const lanes=[
-    {name:'Army',segs:[{a:2004,b:2005.4,cls:'army',t:'<span class="out">Iraq</span>'},{a:2010,b:2011.4,cls:'army',t:'<span class="out">Kuwait</span>'}]},
-    {name:'Recovery',segs:[{a:2011.5,b:2025.4,cls:'recovery',t:'<span class="txt-long">Recovering from service-connected injuries</span><span class="txt-short">Recovering from injuries</span>'}]},
-    {name:'AI',segs:[{a:2022.9,b:2026.9,cls:'ai',t:'Daily'}]}
+  const Y0=2003.6, Y1=2027.2, K=17; // pixels per year
+  const top=yr=>((yr-Y0)*K)+'px', h=(a,b)=>((b-a)*K)+'px';
+  const vt=document.getElementById('vt'); vt.style.height=((Y1-Y0)*K)+'px';
+  const rails=[{a:2004,b:2005.4,c:'army'},{a:2010,b:2011.4,c:'army'},{a:2011.5,b:2025.4,c:'recovery'},{a:2022.9,b:2026.6,c:'ai'}];
+  const items=[
+    {at:2004,yr:'2004–05',t:'Iraq',sub:'Civil affairs, radios and encryption'},
+    {at:2010,yr:'2010–11',t:'Kuwait',sub:'Sergeant, led an eight-person section'},
+    {at:2016.4,yr:'2011–25',t:'Recovering from service-connected injuries',sub:'Fighting my way back to work'},
+    {at:2022.9,yr:'2022 →',t:'Building with AI every day',sub:'Since ChatGPT launched',c:'ai'},
+    {at:2025.9,yr:'2026',t:'Token Tracker',sub:'40% fewer AI tokens, quality held',c:'ai'}
   ];
-  const box=document.getElementById('lanes');
-  lanes.forEach(l=>{
-    const lane=document.createElement('div');lane.className='lane';
-    lane.innerHTML=`<span class="name">${l.name}</span>`+l.segs.map(s=>`<div class="seg ${s.cls}" style="left:${pct(s.a)};width:${w(s.a,s.b)}">${s.t}</div>`).join('');
-    box.appendChild(lane);
-  });
-  const axis=document.getElementById('axis');
-  [2004,2008,2012,2016,2020,2024].forEach(yr=>{const s=document.createElement('span');s.style.left=pct(yr);s.textContent=yr;axis.appendChild(s)});
+  vt.innerHTML=rails.map(r=>`<div class="rail ${r.c}" style="top:${top(r.a)};height:${h(r.a,r.b)}"></div>`).join('')
+    +items.map(i=>`<div class="item ${i.c||''}" style="top:${top(i.at)}"><span class="yr">${i.yr}</span><b>${i.t}</b><span class="sub">${i.sub}</span></div>`).join('');
 })();
 </script>
 </body>
