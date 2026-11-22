@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><!-- draft: keep out of search engines until launch -->
+<title>Jon Serrano — AI implementation and automation</title>
+<meta name="description" content="I build AI workflows that solve problems before they cost you money, and I document them so your team can run them without me.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EEE5; --paper-2:#E9E3D6; --ink:#16181A; --ink-2:#45474A; --ink-3:#6B6A66;
+  --rule:#CFC7B6; --signal:#C4410C; --neutral:#827D74; --wash:#F6DCCB;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --serif:"Fraunces",Georgia,serif; --sans:"Public Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1rem/1.55 var(--sans);
+  background-image:radial-gradient(rgba(22,24,26,.035) 1px,transparent 1px);background-size:4px 4px}
+a{color:inherit;text-underline-offset:.2em;text-decoration-thickness:1px}
+a:hover{color:var(--signal)}
+.wrap{max-width:74rem;margin:0 auto;padding:0 1.5rem}
+.mono{font-family:var(--mono)}
+.label{font:500 .72rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2)}
+.fine{font:400 .7rem/1.5 var(--mono);color:var(--ink-3)}
+
+/* hero */
+header{padding:3.5rem 0 2.2rem;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:3rem;align-items:end;border-bottom:1px solid var(--ink)}
+.line{font:400 .78rem/1.6 var(--mono);color:var(--ink-2);margin:0 0 1.4rem}
+.line span{color:var(--signal)}
+h1{font:600 clamp(1.9rem,3.6vw,3rem)/1.06 var(--serif);font-variation-settings:"opsz" 144;letter-spacing:-.02em;margin:0}
+h1 em{font-style:normal;color:var(--signal)}
+.bridge{font:400 .95rem/1.6 var(--mono);margin:0;padding-left:1rem;border-left:2px solid var(--signal)}
+.evidence{margin-top:1.2rem;font:400 .76rem/2 var(--mono)}
+.evidence a{margin-right:1.1rem;text-decoration:none;border-bottom:1px solid var(--rule);white-space:nowrap}
+.evidence a::after{content:" ↗";color:var(--signal)}
+
+/* board */
+.board{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;border-bottom:1px solid var(--ink)}
+.panel{padding:2rem 2rem 1.8rem 0}
+.panel + .panel{padding-left:2rem;padding-right:0;border-left:1px solid var(--rule)}
+.panel h2{font:800 1.45rem/1.15 var(--serif);letter-spacing:-.01em;margin:.3rem 0 1.2rem}
+
+/* climb chart */
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:400 .74rem/1.45 var(--mono);padding:.5rem .65rem;border-radius:3px;max-width:15rem;opacity:0;transition:opacity .12s}
+.chart .tip.on{opacity:1}
+details.tbl{margin-top:.5rem}
+details.tbl summary{font:500 .7rem/1 var(--mono);cursor:pointer;color:var(--ink-2)}
+details.tbl table{border-collapse:collapse;width:100%;margin-top:.5rem;font-size:.8rem}
+details.tbl td,details.tbl th{text-align:left;font-weight:400;padding:.25rem .4rem;border-bottom:1px solid var(--rule)}
+
+/* translation table */
+.xlate{width:100%;border-collapse:collapse}
+.xlate th{font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);text-align:left;padding:0 0 .7rem;font-weight:500}
+.xrow{border-top:1px solid var(--rule)}
+.xrow summary{list-style:none;display:grid;grid-template-columns:1fr 1.4rem 1fr;gap:.6rem;align-items:baseline;padding:.75rem 0;cursor:pointer}
+.xrow summary::-webkit-details-marker{display:none}
+.xrow .army{color:var(--ink-2);font-size:.92rem}
+.xrow .arrow{color:var(--signal);font-family:var(--mono)}
+.xrow .ai{font-weight:600;font-size:.95rem}
+.xrow .ai::after{content:" +";font:500 .8rem var(--mono);color:var(--signal)}
+.xrow[open] .ai::after{content:" −"}
+.xrow p{margin:0 0 .9rem;font-size:.86rem;color:var(--ink-2);padding-left:.9rem;border-left:2px solid var(--wash)}
+.xhead{display:grid;grid-template-columns:1fr 1.4rem 1fr;gap:.6rem;font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-bottom:.7rem}
+
+/* timeline */
+.timeline{padding:2rem 0 1.6rem;border-bottom:1px solid var(--ink)}
+.timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 1.4rem}
+.lanes{position:relative;margin-left:5.5rem}
+.lane{position:relative;height:2.6rem;border-bottom:1px dashed var(--rule)}
+.lane .name{position:absolute;right:100%;margin-right:.8rem;top:50%;transform:translateY(-50%);font:500 .7rem/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);white-space:nowrap}
+.seg{position:absolute;top:.55rem;height:1.5rem;border-radius:2px;display:flex;align-items:center;padding:0 .45rem;font:500 .72rem/1 var(--mono);white-space:nowrap;overflow:visible}
+.seg.army{background:var(--ink);color:var(--paper)}
+.seg .out{position:absolute;left:calc(100% + .4rem);color:var(--ink)}
+.seg.recovery{background:repeating-linear-gradient(135deg,var(--paper-2) 0 5px,#DDD5C5 5px 10px);border:1px solid var(--neutral);color:var(--ink)}
+.seg.ai{background:var(--signal);color:#fff;border-radius:2px 0 0 2px}
+.seg.ai::after{content:"";position:absolute;right:-.6rem;top:0;border:.75rem solid transparent;border-left:.6rem solid var(--signal);border-right:0}
+.pin{position:absolute;top:-.1rem;bottom:-.1rem;border-left:2px solid var(--ink)}
+.pin span{position:absolute;left:.4rem;top:-1.05rem;font:500 .68rem/1 var(--mono);white-space:nowrap;color:var(--ink)}
+.axis{position:relative;height:1.4rem;margin-left:5.5rem}
+.axis span{position:absolute;transform:translateX(-50%);font:400 .68rem/1 var(--mono);color:var(--ink-3);top:.4rem}
+.gapline{margin:1.4rem 0 0 5.5rem;font:600 1.05rem/1.4 var(--serif);max-width:46rem}
+.gapline span{background:linear-gradient(transparent 60%,var(--wash) 60%)}
+
+footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align-items:baseline;justify-content:space-between}
+.deeper{font:500 .95rem/1 var(--mono)}
+.deeper a{text-decoration:none;border-bottom:2px solid var(--signal);padding-bottom:.2rem}
+.contact{font:400 .85rem/1 var(--mono)}
+.contact a{margin-left:1.2rem}
+
+@media (max-width:900px){
+  header{grid-template-columns:1fr;gap:1.6rem;padding-top:2.5rem}
+  .board{grid-template-columns:1fr}
+  .panel,.panel + .panel{padding:1.8rem 0;border-left:0}
+  .panel + .panel{border-top:1px solid var(--rule)}
+  .lanes,.axis,.gapline{margin-left:0}
+  .lane{height:3.6rem}
+  .lane .name{position:static;transform:none;display:block;padding-top:.15rem}
+  .seg{top:1.45rem}
+  .seg.recovery .txt-long{display:none}
+  .contact a{margin:0 1.2rem 0 0}
+  .contact .avail{display:block;margin-bottom:.8rem}
+}
+@media (min-width:901px){.seg.recovery .txt-short{display:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div>
+    <p class="line">jon_serrano <span>//</span> ai implementation &amp; automation <span>//</span> army veteran <span>//</span> remote <span>//</span> en · es</p>
+    <h1>I build AI workflows that solve problems <em>before they cost you money</em>, and I document them so your team can run them without me.</h1>
+  </div>
+  <div>
+    <p class="bridge">My AI bill ran away from me. I built the fix so yours doesn't.</p>
+    <p class="evidence"><a href="https://github.com/JonBold11/token-tracker-evidence">evaluation</a><a href="https://github.com/JonBold11/token-tracker-evidence/tree/main/source">source code</a><a href="https://github.com/JonBold11/how-i-work">my SOPs</a></p>
+  </div>
+</header>
+
+<section class="board">
+  <div class="panel">
+    <p class="label">Token Tracker · Nov 2026</p>
+    <h2>40% fewer AI tokens, with quality held.</h2>
+    <div class="chart" id="climb">
+      <svg viewBox="0 0 560 300" role="img" aria-labelledby="climbDesc"><desc id="climbDesc">Savings against a plain AI session at each attempt: first method 8.3 percent, missed the 50 percent goal; improved context 24.0 percent; lean setup 51.2 percent but thinner tests; today's setup 40.7 percent with quality restored.</desc></svg>
+      <div class="tip" role="status"></div>
+    </div>
+    <p class="fine">Tokens, not dollars · 3 real test-writing tasks · today's figure is the average of 2 runs · most of the gain comes from the model's effort setting · every result passed the same test</p>
+    <details class="tbl"><summary>View as a table</summary>
+      <table><tr><th>Attempt</th><th>Fewer tokens than a plain session</th></tr>
+      <tr><td>First method</td><td>8.3% (missed the 50% goal)</td></tr>
+      <tr><td>Improved context</td><td>24.0%</td></tr>
+      <tr><td>Lean setup</td><td>51.2% (thinner tests)</td></tr>
+      <tr><td>Today's setup</td><td>40.7% (quality restored)</td></tr></table>
+    </details>
+  </div>
+
+  <div class="panel">
+    <p class="label">Where the habits come from</p>
+    <h2>What the Army taught me, applied to AI.</h2>
+    <div class="xhead"><span>In the Army</span><span></span><span>With AI</span></div>
+    <details class="xrow"><summary><span class="army">Asked sheikhs what to build</span><span class="arrow">→</span><span class="ai">Requirements before code</span></summary>
+      <p>Iraq, 2004–05. My assessments with local leaders became building plans, including a rebuilt courthouse in Baghdad.</p></details>
+    <details class="xrow"><summary><span class="army">Trained a backup radio operator</span><span class="arrow">→</span><span class="ai">No single point of failure</span></summary>
+      <p>Iraq, 2004–05. The unit's only radio operator, I got a cleared backup authorized and trained so encryption never depended on me alone.</p></details>
+    <details class="xrow"><summary><span class="army">Tracked trucks with RFID</span><span class="arrow">→</span><span class="ai">Tracking AI usage</span></summary>
+      <p>Kuwait, 2010–11. As a sergeant I led an eight-person section running the systems that tracked our trucks during the drawdown.</p></details>
+    <details class="xrow"><summary><span class="army">No SIPRNet card without clearance</span><span class="arrow">→</span><span class="ai">Least privilege for AI</span></summary>
+      <p>Kuwait, 2010–11. I issued classified-network access only after clearance. My AI runs in a throwaway copy and can run only its task's check.</p></details>
+    <details class="xrow"><summary><span class="army">Briefed a battalion commander</span><span class="arrow">→</span><span class="ai">Talks to executives</span></summary>
+      <p>Before I'd made sergeant. Then years in customer-facing work: I explain systems to the engineer and the executive alike.</p></details>
+  </div>
+</section>
+
+<section class="timeline">
+  <p class="label">The path</p>
+  <h2>Service, recovery, and AI since day one.</h2>
+  <div class="lanes" id="lanes"></div>
+  <div class="axis" id="axis"></div>
+  <p class="gapline"><span>My resume has a ten-year gap.</span> I spent it recovering from service-connected injuries and fighting my way back to work. That fight is what I bring to your problems.</p>
+</section>
+
+<footer>
+  <p class="deeper"><a href="https://jonbold11.github.io/portfolio/">Read the full log →</a></p>
+  <p class="contact"><span class="avail">remote · available</span><a href="#">email</a><a href="#">linkedin</a><a href="https://github.com/JonBold11">github</a><a href="#">resume</a></p>
+</footer>
+</main>
+
+<script>
+// ---------- climb chart ----------
+(function(){
+  const pts=[
+    {l:"First method",s:"First try",v:8.3,n:"missed goal",d:"8.3% fewer tokens. The AI barely used the code map I gave it."},
+    {l:"Improved context",s:"Context",v:24.0,n:"fixed cause",d:"24.0% fewer. Delivered the context where the AI would use it."},
+    {l:"Lean setup",s:"Lean",v:51.2,n:"thinner tests",d:"51.2% fewer, but a blind reviewer found thinner tests."},
+    {l:"Today",s:"Today",v:40.7,n:"quality back",d:"40.7% fewer, average of 2 runs. Most thorough tests on 2 of 3 tasks, judged blind.",now:1}
+  ];
+  const box=document.getElementById('climb'), svg=document.querySelector('#climb svg');
+  const W=Math.max(340,Math.min(560,box.clientWidth)),H=W<420?280:300,L=36,R=14,T=30,B=46, y0=0,y1=60;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const x=i=>L+(W-L-R)*(i+.5)/pts.length, y=v=>T+(H-T-B)*(1-(v-y0)/(y1-y0));
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+  // grid
+  [0,25,50].forEach(g=>{el('line',{x1:L,x2:W-R,y1:y(g),y2:y(g),stroke:g===50?'#45474A':'#CFC7B6','stroke-width':g===50?1.5:1,'stroke-dasharray':g===50?'5 4':''});
+    el('text',{x:L-8,y:y(g)+4,'text-anchor':'end','font-family':'IBM Plex Mono','font-size':11,fill:'#6B6A66'}).textContent=g+'%';});
+  el('text',{x:L+4,y:y(50)-7,'text-anchor':'start','font-family':'IBM Plex Mono','font-size':11,fill:'#45474A'}).textContent='my 50% goal';
+  // line
+  const d=pts.map((p,i)=>(i?'L':'M')+x(i)+' '+y(p.v)).join(' ');
+  const path=el('path',{d,fill:'none',stroke:'#C4410C','stroke-width':2.5,'stroke-linejoin':'round'});
+  const len=path.getTotalLength(); path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
+  // points and labels
+  const tip=document.querySelector('#climb .tip');
+  pts.forEach((p,i)=>{
+    el('circle',{cx:x(i),cy:y(p.v),r:p.now?7:5.5,fill:p.now?'#C4410C':'#F2EEE5',stroke:'#C4410C','stroke-width':2.5});
+    el('text',{x:x(i),y:y(p.v)-14,'text-anchor':'middle','font-family':'Fraunces','font-weight':800,'font-size':p.now?22:17,fill:'#16181A'}).textContent=p.v+'%';
+    el('text',{x:x(i),y:H-B+20,'text-anchor':'middle','font-family':'IBM Plex Mono','font-size':11,fill:'#16181A','font-weight':500}).textContent=W<480?p.s:p.l;
+    el('text',{x:x(i),y:H-B+35,'text-anchor':'middle','font-family':'IBM Plex Mono','font-size':W<480?9.5:10.5,fill:p.now?'#C4410C':'#6B6A66'}).textContent=p.n;
+    const hit=el('rect',{x:x(i)-(W-L-R)/pts.length/2,y:T-10,width:(W-L-R)/pts.length,height:H-T-B+10,fill:'transparent'});
+    hit.addEventListener('mousemove',e=>{const b=box.getBoundingClientRect();tip.innerHTML=`<b>${p.l}</b><br>${p.d}`;
+      tip.style.left=Math.min(e.clientX-b.left+12,b.width-tip.offsetWidth-4)+'px';tip.style.top=(e.clientY-b.top+12)+'px';tip.classList.add('on')});
+    hit.addEventListener('mouseleave',()=>tip.classList.remove('on'));
+  });
+  const go=()=>{path.style.transition='stroke-dashoffset 1.4s cubic-bezier(.3,.7,.2,1)';path.style.strokeDashoffset=0};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) path.style.strokeDashoffset=0;
+  else new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){go();o.disconnect()}},{threshold:.3}).observe(box);
+})();
+
+// ---------- timeline ----------
+(function(){
+  const Y0=2003, Y1=2027.5, pct=yr=>((yr-Y0)/(Y1-Y0)*100).toFixed(2)+'%', w=(a,b)=>((b-a)/(Y1-Y0)*100).toFixed(2)+'%';
+  const lanes=[
+    {name:'Army',segs:[{a:2004,b:2005.4,cls:'army',t:'<span class="out">Iraq</span>'},{a:2010,b:2011.4,cls:'army',t:'<span class="out">Kuwait</span>'}]},
+    {name:'Recovery',segs:[{a:2011.5,b:2025.4,cls:'recovery',t:'<span class="txt-long">Recovering from service-connected injuries</span><span class="txt-short">Recovering from injuries</span>'}]},
+    {name:'AI',segs:[{a:2022.9,b:2026.9,cls:'ai',t:'Daily'}]}
+  ];
+  const box=document.getElementById('lanes');
+  lanes.forEach(l=>{
+    const lane=document.createElement('div');lane.className='lane';
+    lane.innerHTML=`<span class="name">${l.name}</span>`+l.segs.map(s=>`<div class="seg ${s.cls}" style="left:${pct(s.a)};width:${w(s.a,s.b)}">${s.t}</div>`).join('');
+    box.appendChild(lane);
+  });
+  const axis=document.getElementById('axis');
+  [2004,2008,2012,2016,2020,2024].forEach(yr=>{const s=document.createElement('span');s.style.left=pct(yr);s.textContent=yr;axis.appendChild(s)});
+})();
+</script>
+</body>
+</html>
