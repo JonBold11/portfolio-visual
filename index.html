@@ -66,6 +66,15 @@ details.tbl td,details.tbl th{text-align:left;font-weight:400;padding:.25rem .4r
 .xrow p{margin:0 0 .9rem;font-size:.86rem;color:var(--ink-2);padding-left:.9rem;border-left:2px solid var(--wash)}
 .xhead{display:grid;grid-template-columns:1fr 1.4rem 1fr;gap:.6rem;font:500 .7rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-bottom:.7rem}
 
+/* built for real people */
+.built{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2rem;padding:2rem 0;border-bottom:1px solid var(--ink);align-items:center}
+.built video{display:block;width:100%;height:auto;border-radius:3px;background:#111}
+.built h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 .4rem}
+.built .lede2{font-size:1.05rem;margin:0 0 1.2rem}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0 0 1.2rem;display:grid;gap:.45rem}
+.steps li{counter-increment:s;font-size:.92rem}
+.steps li::before{content:counter(s,decimal-leading-zero) "  ";font:500 .72rem var(--mono);color:var(--signal)}
+@media (max-width:900px){.built{grid-template-columns:1fr;gap:1.2rem}}
 /* timeline: year ruler, deployments as brackets, recovery as a background band */
 .timeline{padding:2rem 0 1.6rem;border-bottom:1px solid var(--ink)}
 .timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 0}
@@ -149,6 +158,20 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
   </div>
 </section>
 
+<section class="built">
+  <div class="clip">
+    <video src="media/watch-demo.mp4" poster="media/watch-demo-poster.jpg" autoplay muted loop playsinline preload="metadata"
+      aria-label="Demo: a timer is set on the round parent dial, rainbow fluid drains on the watch, a leaf appears, a tap reveals an ant for the letter A, and the dial moves on to B."></video>
+  </div>
+  <div class="about">
+    <p class="label">Built for real people</p>
+    <h2>A watch and parent dial I built for my daughter.</h2>
+    <p class="lede2">No phone needed, and she can see time pass.</p>
+    <ol class="steps"><li>Set it on the dial</li><li>Time drains away</li><li>Tap the leaf</li><li>Meet the letter's creature</li></ol>
+    <p class="fine">Two ESP32 devices talking wirelessly · 15 automated test programs · AI wrote the firmware; I set the requirements and tested it on the real devices</p>
+  </div>
+</section>
+
 <section class="timeline">
   <p class="label">The path</p>
   <h2>Service, recovery, and AI.</h2>
@@ -210,6 +233,8 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
   else new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){go();o.disconnect()}},{threshold:.3}).observe(box);
 })();
 
+// respect reduced-motion: don't autoplay the demo
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){const v=document.querySelector('.built video');v.removeAttribute('autoplay');v.pause();v.controls=true;}
 // ---------- timeline ----------
 (function(){
   const box=document.getElementById('ruler');
