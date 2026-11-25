@@ -79,6 +79,19 @@ details.tbl td,details.tbl th{text-align:left;font-weight:400;padding:.25rem .4r
 .more summary::after{content:" +";color:var(--signal)}
 .more[open] summary::after{content:" −"}
 @media (max-width:900px){.built{grid-template-columns:1fr;gap:1.2rem}}
+/* handoff testimonial */
+.said{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:2.5rem;padding:2.2rem 0;border-bottom:1px solid var(--ink);align-items:center}
+.said h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 .8rem}
+.said .lede2{font-size:1.05rem;margin:0 0 1rem}
+.said figure{margin:0;position:relative;padding:1.6rem 1.8rem 1.4rem 2rem;background:rgba(246,220,203,.45);border-left:3px solid var(--signal);border-radius:0 3px 3px 0}
+.said figure::before{content:"\201C";position:absolute;top:-.6rem;left:.9rem;font:800 4.2rem/1 var(--serif);color:var(--signal)}
+.said blockquote{margin:0;font:600 1.12rem/1.5 var(--serif);font-variation-settings:"opsz" 30}
+.said blockquote mark{background:linear-gradient(transparent 62%,rgba(196,65,12,.22) 62%);color:inherit}
+.said figcaption{display:flex;align-items:center;gap:.8rem;margin-top:1.2rem}
+.said figcaption img{width:3.2rem;height:3.2rem;border-radius:50%;object-fit:cover;border:2px solid var(--paper)}
+.said figcaption b{display:block;font:600 .95rem/1.2 var(--sans)}
+.said figcaption span{display:block;margin-top:.2rem;font:400 .74rem/1.4 var(--mono);color:var(--ink-2)}
+@media (max-width:900px){.said{grid-template-columns:1fr;gap:1.4rem}.said figure{padding:1.5rem 1.2rem 1.2rem 1.5rem}.said blockquote{font-size:1.05rem}}
 /* timeline: year ruler, deployments as brackets, recovery as a background band */
 .timeline{padding:2rem 0 1.6rem;border-bottom:1px solid var(--ink)}
 .timeline h2{font:800 1.45rem/1.15 var(--serif);margin:.3rem 0 0}
@@ -176,6 +189,19 @@ footer{padding:1.6rem 0 3rem;display:flex;flex-wrap:wrap;gap:1.2rem 2.5rem;align
       <p class="fine">Two ESP32 devices talking wirelessly · 15 automated test programs · AI wrote the firmware; I set the requirements and tested it on the real devices</p>
     </details>
   </div>
+</section>
+
+<section class="said" id="handoff">
+  <div>
+    <p class="label">Handed over · in her words</p>
+    <h2>I built her an automation, taught her AI, and she outgrew it.</h2>
+    <p class="lede2">That's the goal: you end up able to run it, and build on it, without me.</p>
+    <p class="fine">Built in Make · started with TikTok, then adapted for other platforms in about a week · she used it for seven or eight months</p>
+  </div>
+  <figure>
+    <blockquote>Jon built me a TikTok automation, and we spent about a week adapting it for other platforms. I used it for seven or eight months, and along the way <mark>he taught me how to use AI on my own.</mark> I eventually outgrew the workflow, but it helped me get started. Now I run a social media marketing agency, manage several mortgage broker accounts, and even helped UWM build their two-day, in-person AI course for loan officers.</blockquote>
+    <figcaption><img src="media/p-pointer.jpg" alt="P. Pointer" width="160" height="160" loading="lazy"><div><b>P. Pointer</b><span>Runs a social media marketing agency</span></div></figcaption>
+  </figure>
 </section>
 
 <section class="timeline" id="path">
